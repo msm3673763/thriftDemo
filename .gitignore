@@ -1,0 +1,18 @@
+# 2017.3.30
+#
+
+# ignore Eclipse editor
+.classpath
+.project
+.settings/
+
+# ignore class file
+/target/classes/*
+/target/test-classes/*
+
+# ignore resource file
+/src/main/resources/thrift/gen-java/*
+
+# ignore page
+/pages/node_modules/*
+/WebContent/pages/*
