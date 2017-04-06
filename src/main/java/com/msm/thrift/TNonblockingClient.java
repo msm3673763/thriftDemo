@@ -36,7 +36,7 @@ public class TNonblockingClient {
 			client.helloVoid();
 		}
 		System.out.println("耗时：" + (System.currentTimeMillis()-start));
-
+		
 		//关闭资源
 		transport.close();
 	}
