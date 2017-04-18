@@ -39,20 +39,18 @@ public class ConvertPFX {
             KeyStore inputKeyStore = KeyStore.getInstance("PKCS12");      
             FileInputStream fis = new FileInputStream(PFX_KEYSTORE_FILE);      
             char[] nPassword = null;      
-     
             if ((KEYSTORE_PASSWORD == null)      
                     || KEYSTORE_PASSWORD.trim().equals("")) {      
                 nPassword = null;      
             } else {      
                 nPassword = KEYSTORE_PASSWORD.toCharArray();      
             }      
-     
             inputKeyStore.load(fis, nPassword);      
             fis.close();      
+            
             KeyStore outputKeyStore = KeyStore.getInstance("JKS");      
             outputKeyStore.load(null, KEYSTORE_PASSWORD.toCharArray());      
             Enumeration<String> enums = inputKeyStore.aliases();      
-     
             while (enums.hasMoreElements()) { //we are read in just one certificate.        
                 String keyAlias = (String) enums.nextElement();      
                 System.out.println("alias=[" + keyAlias + "]");      
@@ -64,7 +62,6 @@ public class ConvertPFX {
                             .toCharArray(), certChain);      
                 }      
             }      
-     
             FileOutputStream out = new FileOutputStream(JKS_KEYSTORE_FILE);      
             outputKeyStore.store(out, nPassword);      
             out.close();      
@@ -89,20 +86,18 @@ public class ConvertPFX {
             KeyStore inputKeyStore = KeyStore.getInstance("JKS");      
             FileInputStream fis = new FileInputStream(JKS_KEYSTORE_FILE);      
             char[] nPassword = null;      
-     
             if ((KEYSTORE_PASSWORD == null)      
                     || KEYSTORE_PASSWORD.trim().equals("")) {      
                 nPassword = null;      
             } else {      
                 nPassword = KEYSTORE_PASSWORD.toCharArray();      
             }      
-     
             inputKeyStore.load(fis, nPassword);      
             fis.close();      
+           
             KeyStore outputKeyStore = KeyStore.getInstance("PKCS12");      
             outputKeyStore.load(null, KEYSTORE_PASSWORD.toCharArray());      
             Enumeration<String> enums = inputKeyStore.aliases();      
-     
             while (enums.hasMoreElements()) { //we are read in just one certificate.        
                 String keyAlias = (String) enums.nextElement();      
                 System.out.println("alias=[" + keyAlias + "]");      
@@ -114,7 +109,6 @@ public class ConvertPFX {
                             .toCharArray(), certChain);      
                 }      
             }      
-     
             FileOutputStream out = new FileOutputStream(PFX_KEYSTORE_FILE);      
             outputKeyStore.store(out, nPassword);      
             out.close();      
