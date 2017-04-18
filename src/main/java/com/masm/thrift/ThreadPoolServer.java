@@ -1,4 +1,4 @@
-package com.msm.thrift;
+package com.masm.thrift;
 
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TCompactProtocol;
@@ -9,7 +9,7 @@ import org.apache.thrift.server.TThreadPoolServer.Args;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 
-import com.msm.thrift.Hello.Iface;
+import com.masm.thrift.Hello.Iface;
 
 /**
  * 

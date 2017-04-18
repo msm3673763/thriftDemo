@@ -1,4 +1,4 @@
-package com.msm.thrift;
+package com.masm.thrift;
 
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;

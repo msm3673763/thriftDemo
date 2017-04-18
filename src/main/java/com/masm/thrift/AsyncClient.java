@@ -1,4 +1,4 @@
-package com.msm.thrift;
+package com.masm.thrift;
 
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;

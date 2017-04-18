@@ -1,8 +1,8 @@
-package com.msm.thrift;
+package com.masm.thrift;
 
 import org.apache.thrift.TException;
 
-import com.msm.thrift.Hello.Iface;
+import com.masm.thrift.Hello.Iface;
 
 public class HelloImpl implements Iface {
 
