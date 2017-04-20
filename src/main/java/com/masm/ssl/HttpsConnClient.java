@@ -19,6 +19,8 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.ssl.SSLContexts;
 
+import com.squareup.okhttp.OkHttpClient;
+
 /**
  * 
 * @ClassName: HttpsConnClient 
@@ -30,16 +32,16 @@ import org.apache.http.ssl.SSLContexts;
 public class HttpsConnClient {
 	
 	public static void main(String[] args) throws Exception {
-		client2();
+		client1();
 	}
 	
 	/**
 	 * 
 	* @Title: client1 
-	* @Description: 此方法调不通
+	* @Description: 第一种调用方式
 	* @param @throws Exception    入参
 	* @return void    返回类型
-	* @author （作者） 
+	* @author masm
 	* @throws
 	* @date 2017-4-17 下午3:35:37 
 	* @version V1.0
@@ -48,17 +50,17 @@ public class HttpsConnClient {
 		//忽略hostname验证（172.17.2.144）
 		HttpsURLConnection.setDefaultHostnameVerifier(new HttpsConnClient().new NullHostNameVerifier());
 		
+		//初始化keystore
 		KeyStore clientStore = KeyStore.getInstance("PKCS12");
-        clientStore.load(new FileInputStream("D:/keys/client.p12"),"654321".toCharArray());
-        
+        clientStore.load(new FileInputStream("D:/ssl/client.p12"),"654321".toCharArray());
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         kmf.init(clientStore, "654321".toCharArray());
         KeyManager[] kms = kmf.getKeyManagers();
 
+        //初始化truststore
         KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(new FileInputStream("D:/keys/tomcat.keystore"), 
+        trustStore.load(new FileInputStream("D:/ssl/server.keystore"), 
         		"123456".toCharArray());
-
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(trustStore);
         TrustManager[] tms = tmf.getTrustManagers();
@@ -83,12 +85,23 @@ public class HttpsConnClient {
         con.disconnect();
 	}
 	
+	/**
+	 * 
+	* @Title: client2 
+	* @Description: 第二种 
+	* @param @throws Exception    入参
+	* @return void    返回类型
+	* @author masm 
+	* @throws
+	* @date 2017-4-20 下午4:45:09 
+	* @version V1.0
+	 */
 	public static void client2() throws Exception {
 		//忽略hostname验证（172.17.2.144）
 		HttpsURLConnection.setDefaultHostnameVerifier(new HttpsConnClient().new NullHostNameVerifier());
 		
 	    KeyStore keyStore = KeyStore.getInstance("PKCS12");
-        keyStore.load(new FileInputStream(new File("D:/keys/client.p12")), "654321".toCharArray());
+        keyStore.load(new FileInputStream(new File("D:/ssl/client.p12")), "654321".toCharArray());
 	    SSLContext sslcontext = SSLContexts.custom()
 	    		//忽略掉对服务器端证书的校验
 //              .loadTrustMaterial(new TrustStrategy() {
@@ -100,7 +113,7 @@ public class HttpsConnClient {
 	    		//加载服务端提供的truststore(如果服务器提供truststore的话就不用忽略对服务器端证书的校验了)
 //                .loadTrustMaterial(new File("D:/Program Files (x86)/Java/jdk1.7.0_45/jre/lib/security/cacerts"), 
 //                		"changeit".toCharArray(), new TrustSelfSignedStrategy())
-                .loadTrustMaterial(new File("D:/keys/tomcat.keystore"), 
+                .loadTrustMaterial(new File("D:/ssl/server.keystore"), 
                 		"123456".toCharArray(), new TrustSelfSignedStrategy())
                 .loadKeyMaterial(keyStore, "654321".toCharArray())
                 .build();
@@ -109,6 +122,10 @@ public class HttpsConnClient {
 	    SSLSocketFactory ssf = sslcontext.getSocketFactory();
 	    // 创建URL对象
 	    URL myURL = new URL("https://172.17.2.144:8443");
+	    
+	    OkHttpClient client = new OkHttpClient();
+	    client.setSslSocketFactory(ssf);
+	    
 	    // 创建HttpsURLConnection对象，并设置其SSLSocketFactory对象
 	    HttpsURLConnection httpsConn = (HttpsURLConnection) myURL.openConnection();
 	    httpsConn.setSSLSocketFactory(ssf);
