@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -67,6 +69,7 @@ public class OkHttpClientTest {
 		//初始化okhttpclient
 		client = new OkHttpClient();
 		client.setSslSocketFactory(sslContext.getSocketFactory());
+//		client.setHostnameVerifier(new OkHttpClientTest().new NullHostNameVerifier());//忽略hostname的验证
 	}
 
 	/**
@@ -103,6 +106,7 @@ public class OkHttpClientTest {
         //初始化okhttpclient
         client = new OkHttpClient();
         client.setSslSocketFactory(ssf);
+//        client.setHostnameVerifier(new OkHttpClientTest().new NullHostNameVerifier());//忽略hostname的验证
 	}
 	
 	/**
@@ -182,6 +186,18 @@ public class OkHttpClientTest {
 	        throw new IOException("Unexpected code " + response);
 	    }
 	}
+	
+	public class NullHostNameVerifier implements HostnameVerifier {
+        /*
+         * (non-Javadoc)
+         * 
+         * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String,
+         * javax.net.ssl.SSLSession)
+         */
+        public boolean verify(String arg0, SSLSession arg1) {
+            return true;
+        }
+    }
 	
 	public static void main(String[] args) throws Exception {
 		OkHttpClientTest test = new OkHttpClientTest();
