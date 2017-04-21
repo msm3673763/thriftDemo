@@ -35,7 +35,18 @@ public class OkHttpClientTest {
 	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 	private static OkHttpClient client;
 	
-	public void init2() throws Exception {
+	/**
+	 * 
+	* @Title: init1 
+	* @Description: 加载密钥库和信任库，初始化okhttpclient（第一种）
+	* @param @throws Exception    入参
+	* @return void    返回类型
+	* @author masm
+	* @throws
+	* @date 2017-4-21 下午2:37:43 
+	* @version V1.0
+	 */
+	public void init1() throws Exception {
 		//初始化keystore
 		KeyStore keyStore = KeyStore.getInstance("JKS");
 //		keyStore.load(new FileInputStream("D:/ssl/server.keystore"), "123456".toCharArray());
@@ -52,14 +63,16 @@ public class OkHttpClientTest {
 		
 		SSLContext sslContext = SSLContext.getInstance("TLS");
 		sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), new SecureRandom());
+		
+		//初始化okhttpclient
 		client = new OkHttpClient();
 		client.setSslSocketFactory(sslContext.getSocketFactory());
 	}
 
 	/**
 	 * 
-	* @Title: init 
-	* @Description: okhttpclient初始化 
+	* @Title: init2 
+	* @Description: 加载密钥库和信任库，初始化okhttpclient（第二种方式）
 	* @param @throws Exception    入参
 	* @return void    返回类型
 	* @author masm 
@@ -67,7 +80,7 @@ public class OkHttpClientTest {
 	* @date 2017-4-20 下午3:56:27 
 	* @version V1.0
 	 */
-	public void init() throws Exception {
+	public void init2() throws Exception {
 		KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(new FileInputStream(new File("D:/ssl/openssl/client.p12")), "123456".toCharArray());
         SSLContext sslcontext = SSLContexts.custom()
@@ -86,8 +99,8 @@ public class OkHttpClientTest {
                 .loadKeyMaterial(keyStore, "123456".toCharArray())
                 .build();
         
-        //okhttp get方式调用
         SSLSocketFactory ssf = sslcontext.getSocketFactory();
+        //初始化okhttpclient
         client = new OkHttpClient();
         client.setSslSocketFactory(ssf);
 	}
@@ -172,7 +185,7 @@ public class OkHttpClientTest {
 	
 	public static void main(String[] args) throws Exception {
 		OkHttpClientTest test = new OkHttpClientTest();
-		test.init();
+		test.init1();
 		test.httpPostForJson();
 	}
 }
